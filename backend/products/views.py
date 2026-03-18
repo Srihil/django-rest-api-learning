@@ -1,18 +1,15 @@
-from rest_framework import generics, mixins, permissions, authentication
+from rest_framework import generics, mixins, permissions  
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Product
-from api.authentication import TokenAuthentication
-from .permissions import IsStaffEditorPermission
+from api.mixins import StaffEditorPermissionMixin
 from .serializers import ProductSerializers
 
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(StaffEditorPermissionMixin, generics.ListCreateAPIView):
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
-  authentication_classes = [authentication.SessionAuthentication,TokenAuthentication]
-  permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
+  
   def perform_create(self, serializer):
     print(serializer.validated_data)
     title = serializer.validated_data.get('title')
@@ -23,15 +20,15 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
 Product_List_Create_View = ProductListCreateAPIView.as_view()
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
+class ProductDetailAPIView(StaffEditorPermissionMixin, generics.RetrieveAPIView):
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
-
+  
 Product_Detail_View = ProductDetailAPIView.as_view()
 
 
 
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(StaffEditorPermissionMixin, generics.UpdateAPIView):
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
   lookup_field = 'pk'
@@ -45,7 +42,7 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
 Product_Update_View = ProductUpdateAPIView.as_view()
 
 
-class ProductDestroyAPIView(generics.DestroyAPIView):
+class ProductDestroyAPIView(StaffEditorPermissionMixin, generics.DestroyAPIView):
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
   lookup_field = 'pk'
@@ -61,6 +58,7 @@ class ProductMixinView(mixins.ListModelMixin,mixins.RetrieveModelMixin, generics
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
   lookup_field = 'pk'
+  permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
   def get(self, request, *args, **kwargs):
     pk = kwargs.get("pk")
