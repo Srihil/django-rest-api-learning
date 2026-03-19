@@ -20,6 +20,8 @@ class ProductSerializers(serializers.ModelSerializer):
       'price',
       'sales_price',
       'my_discount',
+      'public',
+      
     ]
 
   # def create(self, validated_data):

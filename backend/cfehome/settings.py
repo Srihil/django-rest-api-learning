@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'algoliasearch_django',
     'rest_framework',
     'rest_framework.authtoken',
     'api',
     'products',
+    'search',
 ]
 
 MIDDLEWARE = [
@@ -130,4 +132,10 @@ REST_FRAMEWORK = {
   "DEFAULT_PERMISSION_CLASSES": [
     "rest_framework.permissions.IsAuthenticatedOrReadOnly"
   ]
+}
+
+ALGOLIA = {
+  'APPLICATION_ID': 'IOXVT8372G',
+  'API_KEY': '0826633b31bd92f07c36ad418b3255b8',
+  'INDEX_PREFIX': 'cfe'
 }
